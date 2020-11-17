@@ -763,7 +763,7 @@ namespace Mono.Debugging.Evaluation
 				var = ctx.Adapter.GetMember (ctx, self, ctx.Adapter.GetEnclosingType (ctx), self.Value, name);
 				if (var != null)
 					return var;
-				
+
 				var = ctx.Adapter.GetMember (ctx, self, self.Type, self.Value, name);
 				if (var != null)
 					return var;
@@ -793,6 +793,16 @@ namespace Mono.Debugging.Evaluation
 				string message = string.Format ("An object reference is required for the non-static field, method, or property '{0}.{1}'.",
 				                                ctx.Adapter.GetDisplayTypeName (ctx, type), name);
 				throw ParseError (message);
+			}
+
+			// Look in namespaces
+
+			if (ctx.Adapter.GetImportedNamespaces (ctx).Any(namespaze =>
+				namespaze == name
+				|| namespaze.StartsWith (name + ".", StringComparison.Ordinal)
+				|| namespaze.Contains ("." + name + ".")
+				|| namespaze.EndsWith ("." + name, StringComparison.Ordinal))) {
+				return new NamespaceValueReference (ctx, name);
 			}
 
 			throw ParseError ("Unknown identifier: {0}", name);
