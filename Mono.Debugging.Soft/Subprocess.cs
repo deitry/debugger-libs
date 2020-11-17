@@ -174,7 +174,7 @@ namespace Mono.Debugging.Soft
 		public static string GetExeName (string monoCommandArgs)
 		{
 			foreach (var arg in GetArguments (monoCommandArgs)) {
-				if (arg.StartsWith ("--"))
+				if (arg.StartsWith ("--", StringComparison.Ordinal))
 					continue;
 				var ext = Path.GetExtension (arg).ToLower ();
 				if ((ext == ".dll" || ext == ".exe") && File.Exists (arg))
