@@ -36,7 +36,7 @@ namespace Mono.Debugger.Soft
 		public StreamReader StandardOutput { get; set; }
 		public StreamReader StandardError { get; set; }
 
-		
+
 		public Process Process {
 			get {
 				ProcessWrapper pw = process as ProcessWrapper;
@@ -171,7 +171,7 @@ namespace Mono.Debugger.Soft
 
 		HashSet<ThreadMirror> threadsToInvalidate = new HashSet<ThreadMirror> ();
 		ThreadMirror[] threadCache;
-		
+
 		void InvalidateThreadAndFrameCaches () {
 			lock (threadsToInvalidate) {
 				foreach (var thread in threadsToInvalidate)
@@ -319,7 +319,7 @@ namespace Mono.Debugger.Soft
 		public void ClearAllBreakpoints () {
 			conn.ClearAllBreakpoints ();
 		}
-		
+
 		public void Disconnect () {
 			conn.Close ();
 		}
@@ -349,7 +349,7 @@ namespace Mono.Debugger.Soft
 				res [i] = GetType (ids [i]);
 			return res;
 		}
-		
+
 		internal void queue_event_set (EventSet es) {
 			lock (queue_monitor) {
 				queue.Enqueue (es);
@@ -791,12 +791,12 @@ namespace Mono.Debugger.Soft
 
 		internal void CheckProtocolVersion (int major, int minor) {
 			if (!conn.Version.AtLeast (major, minor))
-				throw new NotSupportedException ("This request is not supported by the protocol version implemented by the debuggee.");
+				throw new NotSupportedException ($"This request is not supported by the protocol version implemented by the debuggee. conn.Version = {conn.Version.MajorVersion}.{conn.Version.MinorVersion} ({conn.Version.VMVersion}), required = {major}.{minor}");
 		}
     }
 
 	class EventHandler : MarshalByRefObject, IEventHandler
-	{		
+	{
 		VirtualMachine vm;
 
 		public EventHandler (VirtualMachine vm) {
@@ -876,7 +876,7 @@ namespace Mono.Debugger.Soft
 					break;
 				}
 			}
-			
+
 			if (l.Count > 0)
 				vm.queue_event_set (new EventSet (vm, suspend_policy, l.ToArray ()));
 		}
